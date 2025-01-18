@@ -23,6 +23,10 @@ Just as important as the ghosts' movement AI is the implementation of their beha
 ![screenshot](Assets/Screenshot/Screenshot01.png)
 
 ## Version History (버전 내역)
+**V 0.1 - (2025-01-18)**
+- Stage editing is nearly complete
+- Currently structuring the main game routine
+- Wrote a superclass for the singleton
 
 **V 0.1 - (2025-01-17)**
 - Project setup completed

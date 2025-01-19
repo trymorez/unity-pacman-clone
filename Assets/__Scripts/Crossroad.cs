@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class SuperBeans : Bean
+public class Crossroad : MonoBehaviour
 {
 
     void Start()

@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 3540960961713616635}
   - component: {fileID: -9014404540491365752}
   m_Layer: 0
-  m_Name: SuperBeans
+  m_Name: PowerBeans
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 2.8, y: 2.8, z: 2.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2825073827314989960}
@@ -159,14 +159,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstState: 0
+  timeHome: 5
+  timeExiting: 2
+  timeScattering: 5
   eyes:
   - {fileID: 21300000, guid: cad4634b92bcefc4baf6e90c6b12e2e8, type: 3}
   - {fileID: 21300000, guid: e9b925d06f83b7b4b80df23106c1678a, type: 3}
   - {fileID: 21300000, guid: 394ac88bbe2142843a19faf49a1a7384, type: 3}
   - {fileID: 21300000, guid: efa959a90e631874a81a20246d32ca5f, type: 3}
   eyeRenderer: {fileID: 1910178766691477629}
-  inHomeDuration: 5
-  moveSpeed: 1
+  moveSpeed: 2
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -272,7 +274,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 2.8, y: 2.8, z: 2.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2825073827314989960}
@@ -321,7 +323,7 @@ SpriteRenderer:
   m_SortingLayerID: -498104737
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: efa959a90e631874a81a20246d32ca5f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cad4634b92bcefc4baf6e90c6b12e2e8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

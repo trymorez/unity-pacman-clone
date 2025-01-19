@@ -1,5 +1,5 @@
 
-# Pacman Clone V 0.1
+# Pacman Clone V 0.3
 
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
@@ -20,9 +20,12 @@ Just as important as the ghosts' movement AI is the implementation of their beha
 
 ## Screenshots (스크린샷)
 
-![screenshot](Assets/Screenshot/Screenshot01.png)
+![screenshot](Assets/Screenshot/screenshot01.png)
 
 ## Version History (버전 내역)
+**V 0.3  - (2025-01-20)**
+- The ghosts can now exit from home one by one, starting with the center ghost, followed by the left ghost, and then the right ghost
+
 **V 0.2  - (2025-01-19)**
 - Began testing the basic movement and wall detection of the ghost in the ready state
 

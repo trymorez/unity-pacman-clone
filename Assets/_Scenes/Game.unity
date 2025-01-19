@@ -13978,7 +13978,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27f4a9b4c880d86448ffb06323fa09f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SlotOpen: 
+  GhostInSlot: 010101
+  SlotXPos:
+  - -2
+  - 0
+  - 2
+  SlotExitYPos: 3.5
 --- !u!4 &1474585505 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8501089561303027412, guid: a64a054753c32564e8f93a6dfca62aaf, type: 3}

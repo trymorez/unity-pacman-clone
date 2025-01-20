@@ -1,11 +1,14 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using static GameManager;
 
 public class Ghost : MonoBehaviour
 {
     [SerializeField] GhostState firstState;
+    [SerializeField] Transform scatterPoint;
     public GhostState State { get; private set; }
     public enum GhostState
     {
@@ -26,10 +29,11 @@ public class Ghost : MonoBehaviour
     [SerializeField] LayerMask wallLayer;
     [SerializeField] Vector2 direction = Vector2.up;
     [SerializeField] Vector2 eyeDirection = Vector2.up;
+    [SerializeField] int currentSlot;
     Bounds bounds;
     Rigidbody2D rb;
     float stayingDuration;
-    [SerializeField] int currentSlot;
+    bool moveBetweenSlot;
 
     public static Action<GhostState> OnBeforeGhostStateChange;
     public static Action<GhostState> OnAfterGhostStateChange;
@@ -43,7 +47,7 @@ public class Ghost : MonoBehaviour
 
     void Start()
     {
-        GhostStateChange(GhostState.InHome);
+        GhostStateChange(firstState);
     }
 
     void Update()
@@ -57,6 +61,7 @@ public class Ghost : MonoBehaviour
                 GhostExitingHome();
                 break;
             case GhostState.Scattering:
+                GhostScattering();
                 break;
             case GhostState.Chasing:
                 break;
@@ -77,18 +82,93 @@ public class Ghost : MonoBehaviour
 
     void BeforeGhostStateChange(GhostState newState)
     {
-        if (newState == GhostState.InHome)
+        switch (newState)
         {
-            for (int i = 0; i < 3; i++)
-            {
-                if (transform.position.x == Home.Instance.SlotXPos[i])
+            case GhostState.InHome:
+                for (int i = 0; i < 3; i++)
                 {
-                    currentSlot = i;
+                    if (transform.position.x == Home.Instance.SlotXPos[i])
+                    {
+                        currentSlot = i;
+                    }
                 }
-            }
+            break;
+            case GhostState.ExitingHome:
+                //add left and right as initial available path
+                OpenPath.Clear();
+                OpenPath.Add(Vector2.left);
+                OpenPath.Add(Vector2.right);
+                break;
+            case GhostState.Scattering:
+                directionDecided = false;
+                break;
         }
     }
 
+
+    #region --- Scattering ---
+    [SerializeField] List<Vector2> OpenPath = new List<Vector2>();
+    [SerializeField] bool directionDecided = false;
+
+    void GhostScattering()
+    {
+        direction = CheckDirectionToScatter();
+        DrawEyes(direction);
+        transform.Translate(direction * moveSpeed * Time.deltaTime);
+    }
+
+    Vector2 CheckDirectionToScatter()
+    {
+        if (directionDecided == true)
+        {
+            return direction;
+        }
+
+        Vector2 currentPos = transform.position;
+        float minDistance = float.MaxValue;
+        Vector2 bestDirection = Vector2.zero;
+
+        foreach (var dir in OpenPath)
+        {
+            //prevent to go back
+            if (dir == -direction)
+            {
+                continue;
+            }
+            Vector2 newPos = currentPos + dir * 2f;
+            float distance = Vector2.Distance(newPos, scatterPoint.position);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                bestDirection = dir;
+            }
+        }
+        Debug.Log("best: " + bestDirection);
+        directionDecided = true;
+        return bestDirection;
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Intersection"))
+        {
+            return;
+        }
+
+        directionDecided = false;
+        var intersection = other.GetComponent<Intersection>();
+        transform.position = intersection.transform.position;
+        OpenPath.Clear();
+        foreach (var path in intersection.OpenPath)
+        {
+            OpenPath.Add(path);
+            Debug.Log(path);
+        }
+    }
+
+    #endregion
+    #region --- Exiting Home ---
     void GhostExitingHome()
     {
         float exitPos = Home.Instance.SlotExitYPos;
@@ -102,9 +182,8 @@ public class Ghost : MonoBehaviour
             GhostStateChange(GhostState.Scattering);
         }
     }
-
-    bool moveBetweenSlot;
-
+    #endregion
+    #region --- In Home ---
     void GhostInHome()
     {
         stayingDuration += Time.deltaTime;
@@ -132,7 +211,7 @@ public class Ghost : MonoBehaviour
 
     private void CheckIfHitWall()
     {
-        float layLength = 0.1f;
+        float layLength = 0.7f;
 
         Vector2 startPos = transform.position + (Vector3)(bounds.extents * direction);
         RaycastHit2D hit = Physics2D.Raycast(startPos, direction, layLength, wallLayer);
@@ -181,6 +260,7 @@ public class Ghost : MonoBehaviour
             }
         }
     }
+    #endregion
 
     void DrawEyes(Vector2 newDirection)
     {

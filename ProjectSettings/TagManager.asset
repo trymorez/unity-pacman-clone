@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Intersection
   layers:
   - Default
   - TransparentFX
@@ -41,8 +42,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Ghost
+  - name: Actor
     uniqueID: 3796862559
+    locked: 0
+  - name: New Layer 2
+    uniqueID: 479798133
     locked: 0
   m_RenderingLayers:
   - Default

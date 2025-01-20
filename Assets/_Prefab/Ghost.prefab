@@ -159,6 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstState: 0
+  scatterPoint: {fileID: 0}
   timeHome: 5
   timeExiting: 2
   timeScattering: 5
@@ -168,12 +169,15 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 394ac88bbe2142843a19faf49a1a7384, type: 3}
   - {fileID: 21300000, guid: efa959a90e631874a81a20246d32ca5f, type: 3}
   eyeRenderer: {fileID: 1910178766691477629}
-  moveSpeed: 2
+  moveSpeed: 5
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
   direction: {x: 0, y: 1}
   eyeDirection: {x: 0, y: 1}
+  currentSlot: 0
+  OpenPath: []
+  directionDecided: 0
 --- !u!50 &5960743063483244888
 Rigidbody2D:
   serializedVersion: 5
@@ -231,7 +235,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -245,7 +249,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.76, y: 1.76}
+  m_Size: {x: 0.1, y: 0.1}
   m_EdgeRadius: 0
 --- !u!1 &1553658778366826405
 GameObject:

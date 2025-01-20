@@ -1,5 +1,5 @@
 
-# Pacman Clone V 0.3
+# Pacman Clone V 0.4
 
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
@@ -11,6 +11,8 @@ In my previous project, Space Invaders, I used coroutines as the main routine an
 
 Just as important as the ghosts' movement AI is the implementation of their behavior patterns. The ghosts in Pac-Man move with completely different and unique behavior patterns based on various AI states (idle, chase, scatter, frightened, and eye-only). Implementing these behaviors as state patterns will make maintenance easier, enhance scalability, and provide a basic framework for AI agents in future games.
 
+**The game is not working condition yet.**
+
 - Recommended Unity version: Unity 6 (6000.0.32f1 and later)
 
 
@@ -20,9 +22,12 @@ Just as important as the ghosts' movement AI is the implementation of their beha
 
 ## Screenshots (스크린샷)
 
-![screenshot](Assets/Screenshot/screenshot01.png)
+![screenshot](Assets/Screenshot/screenshot V0.4.png)
 
 ## Version History (버전 내역)
+**V 0.4  - (2025-01-20)**
+- Ghost scattering logic has been implemented. The ghosts will now move to predetermined positions using custom AI
+
 **V 0.3  - (2025-01-20)**
 - The ghosts can now exit from home one by one, starting with the center ghost, followed by the left ghost, and then the right ghost
 

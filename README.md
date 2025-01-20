@@ -22,7 +22,8 @@ Just as important as the ghosts' movement AI is the implementation of their beha
 
 ## Screenshots (스크린샷)
 
-![screenshot](Assets/Screenshot/screenshot V0.4.png)
+![screenshot](Assets/Screenshot/screenshot-V0.4.png)
+                                                             
 
 ## Version History (버전 내역)
 **V 0.4  - (2025-01-20)**

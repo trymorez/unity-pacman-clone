@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class Pacman : MonoBehaviour
 {
     [SerializeField] LayerMask wallLayer;
+    [SerializeField] LayerMask intersectionLayer;
     [SerializeField] float moveSpeed = 0.5f;
     [SerializeField] List<Vector2> OpenPath = new List<Vector2>();
     Vector2 moveInput;
@@ -47,33 +48,29 @@ public class Pacman : MonoBehaviour
         {
             if (DirectionOpen(moveInput))
             {
-                internalPos = (Vector2)currentPos + (moveInput.normalized * 1.5f);
-                targetPos = internalPos;
-                targetPos.y = Mathf.Clamp(targetPos.y, -14.5f, 13.5f);
-                targetPos.x = Mathf.Clamp(targetPos.x, -12.5f, 12.5f);
-                if (targetPos.x == -11)
-                {
-                    targetPos.x = -12;
-                }
-                if (targetPos.x == 11)
-                {
-                    targetPos.x = 12;
-                }
-                directionDecided = true;
+                MovementRestrict(currentPos);
             }
         }
     }
 
-    Vector2 MovementRestrict(Vector2 inputDirection)
+    void MovementRestrict(Vector2 currentPos)
     {
-        foreach (var direction in OpenPath)
-        {
-            if (direction == inputDirection.normalized)
-            {
-                return inputDirection;
-            }
-        }
-        return Vector2.zero;
+        var moveVector = moveInput.normalized;
+        targetPos = (Vector2)currentPos + (moveVector * 1.5f);
+
+        if (currentPos.x == -10.5 && moveVector == Vector2.left)
+            targetPos.x = -12.5f;
+        else if (currentPos.x == -12.5 && moveVector == Vector2.right)
+            targetPos.x = -10.5f;
+        else if (currentPos.x == 10.5 && moveVector == Vector2.right)
+            targetPos.x = 12.5f;
+        else if (currentPos.x == 12.5 && moveVector == Vector2.left)
+            targetPos.x = 10.5f;
+        if (currentPos.y == 11 && moveVector == Vector2.up)
+            targetPos.y = 13.5f;
+        if (currentPos.y == 13.5 && moveVector == Vector2.down)
+            targetPos.y = 11;
+        directionDecided = true;
     }
 
     public void OnMove(InputAction.CallbackContext callback)

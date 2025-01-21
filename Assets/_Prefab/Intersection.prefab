@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3219299428456806773}
   - component: {fileID: 274949248177655321}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,9 +98,9 @@ GameObject:
   - component: {fileID: 7269191236422641656}
   - component: {fileID: 1986462233534232935}
   - component: {fileID: 5758414365722136151}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Intersection
-  m_TagString: Untagged
+  m_TagString: Intersection
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

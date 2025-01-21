@@ -30,9 +30,9 @@ public class Ghost : MonoBehaviour
     [SerializeField] Vector2 direction = Vector2.up;
     [SerializeField] Vector2 eyeDirection = Vector2.up;
     [SerializeField] int currentSlot;
-    Bounds bounds;
+    Bounds ghostBounds;
     Rigidbody2D rb;
-    float stayingDuration;
+    float stayingHomeTime;
     bool moveBetweenSlot;
 
     public static Action<GhostState> OnBeforeGhostStateChange;
@@ -41,7 +41,7 @@ public class Ghost : MonoBehaviour
 
     void Awake()
     {
-        bounds = GetComponent<Collider2D>().bounds;
+        ghostBounds = GetComponent<Collider2D>().bounds;
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -125,8 +125,8 @@ public class Ghost : MonoBehaviour
         }
 
         Vector2 currentPos = transform.position;
-        float minDistance = float.MaxValue;
         Vector2 bestDirection = Vector2.zero;
+        float minDistance = float.MaxValue;
 
         foreach (var dir in OpenPath)
         {
@@ -144,7 +144,6 @@ public class Ghost : MonoBehaviour
                 bestDirection = dir;
             }
         }
-        Debug.Log("best: " + bestDirection);
         directionDecided = true;
         return bestDirection;
     }
@@ -159,11 +158,11 @@ public class Ghost : MonoBehaviour
         directionDecided = false;
         var intersection = other.GetComponent<Intersection>();
         transform.position = intersection.transform.position;
+
         OpenPath.Clear();
         foreach (var path in intersection.OpenPath)
         {
             OpenPath.Add(path);
-            Debug.Log(path);
         }
     }
 
@@ -186,34 +185,41 @@ public class Ghost : MonoBehaviour
     #region --- In Home ---
     void GhostInHome()
     {
-        stayingDuration += Time.deltaTime;
+        stayingHomeTime += Time.deltaTime;
 
         transform.Translate(direction * moveSpeed * Time.deltaTime);
 
-        if (moveBetweenSlot)
-        {
-            if (currentSlot == 0 && transform.position.x >= 0 ||
-                currentSlot == 2 && transform.position.x <= 0)
-            {
-                transform.position = new Vector3(0, transform.position.y, 0);
-                Home.Instance.GhostInSlot[currentSlot] = false;
-                currentSlot = 1;
-                direction = Vector2.up;
-            }
-        }
-
+        //MoveBetweenSlotCompleted();
         DrawEyes(direction);
         CheckIfHitWall();
         MoveBetweenSlot();
+        MoveBetweenSlotCompleted();
         //Debug.DrawRay(startPos, direction * layLength, Color.red);
         //Debug.Log(bounds.extents);
+    }
+
+    private void MoveBetweenSlotCompleted()
+    {
+        if (!moveBetweenSlot)
+        {
+            return;
+        }
+
+        if (currentSlot == 0 && transform.position.x >= 0 ||
+            currentSlot == 2 && transform.position.x <= 0)
+        {
+            transform.position = new Vector3(0, transform.position.y, 0);
+            Home.Instance.GhostInSlot[currentSlot] = false;
+            currentSlot = 1;
+            direction = Vector2.up;
+        }
     }
 
     private void CheckIfHitWall()
     {
         float layLength = 0.7f;
 
-        Vector2 startPos = transform.position + (Vector3)(bounds.extents * direction);
+        Vector2 startPos = transform.position + (Vector3)(ghostBounds.extents * direction);
         RaycastHit2D hit = Physics2D.Raycast(startPos, direction, layLength, wallLayer);
 
         if (hit.collider != null)
@@ -252,10 +258,10 @@ public class Ghost : MonoBehaviour
         //if the ghost is in the center slot
         if (transform.position.x == Home.Instance.SlotXPos[1])
         {
-            if (stayingDuration > timeHome)
+            if (stayingHomeTime > timeHome)
             {
                 direction = Vector2.up;
-                stayingDuration = 0;
+                stayingHomeTime = 0;
                 GhostStateChange(GhostState.ExitingHome);
             }
         }

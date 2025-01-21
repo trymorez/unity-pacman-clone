@@ -1,5 +1,5 @@
 
-# Pacman Clone V 0.4
+# Pacman Clone V 0.45
 
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
@@ -26,6 +26,9 @@ Just as important as the ghosts' movement AI is the implementation of their beha
                                                              
 
 ## Version History (버전 내역)
+**V 0.45  - (2025-01-21)**
+- Started testing the movement of Pacman
+
 **V 0.4  - (2025-01-20)**
 - Ghost scattering logic has been implemented. The ghosts will now move to predetermined positions using custom AI
 

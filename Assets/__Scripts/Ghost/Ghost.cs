@@ -19,6 +19,7 @@ public class Ghost : MonoBehaviour
         Fleeing,
         ReturnHome,
     }
+
     [SerializeField] Transform pacman;
     [SerializeField] float timeHome = 5f;
     [SerializeField] float timeExiting = 2f;
@@ -34,6 +35,7 @@ public class Ghost : MonoBehaviour
     [SerializeField] Vector2 direction = Vector2.up;
     [SerializeField] Vector2 eyeDirection = Vector2.up;
     [SerializeField] int currentSlot;
+
     Bounds ghostBounds;
     Rigidbody2D rb;
     float stayingHomeTime;
@@ -41,12 +43,18 @@ public class Ghost : MonoBehaviour
 
     public static Action<GhostState> OnBeforeGhostStateChange;
     public static Action<GhostState> OnAfterGhostStateChange;
-
+    
 
     void Awake()
     {
+        GameManager.OnGamePlaying += OnGamePlaying;
         ghostBounds = GetComponent<Collider2D>().bounds;
         rb = GetComponent<Rigidbody2D>();
+    }
+
+    void OnDestroy()
+    {
+        GameManager.OnGamePlaying -= OnGamePlaying;
     }
 
     void Start()
@@ -54,7 +62,7 @@ public class Ghost : MonoBehaviour
         GhostStateChange(firstState);
     }
 
-    void Update()
+    void OnGamePlaying()
     {
         switch (State)
         {
@@ -220,23 +228,18 @@ public class Ghost : MonoBehaviour
 
         if (State == GhostState.Scattering)
         {
-            Debug.Log(timeScatteringSpent);
             if (timeScatteringSpent >= timeScattering)
             {
-                Debug.Log("Mode Change! -> Chasing");
                 GhostStateChange(GhostState.Chasing);
             }
         }
         else if (State == GhostState.Chasing)
         {
-            Debug.Log(timeChasingSpent);
             if (timeChasingSpent >= timeChasing)
             {
-                Debug.Log("Mode Change! -> Scattering");
                 GhostStateChange(GhostState.Scattering);
             }
         }
-
     }
 
     #endregion
@@ -262,13 +265,10 @@ public class Ghost : MonoBehaviour
 
         transform.Translate(direction * moveSpeed * Time.deltaTime);
 
-        //MoveBetweenSlotCompleted();
         DrawEyes(direction);
         CheckIfHitWall();
         MoveBetweenSlot();
         MoveBetweenSlotCompleted();
-        //Debug.DrawRay(startPos, direction * layLength, Color.red);
-        //Debug.Log(bounds.extents);
     }
 
     private void MoveBetweenSlotCompleted()

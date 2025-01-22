@@ -3,14 +3,13 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-    public int Life {  get; private set; }
-    public int Score {  get; private set; }
-    public int HighScore {  get; private set; }
+    public static int Life = 3;
+    public static int Score = 0;
+    public static int HighScore = 0;
 
     public static Action<GameState> OnBeforeGameStateChange;
     public static Action<GameState> OnAfterGameStateChange;
     public static Action OnGamePlaying;
-
     
     public GameState State { get; private set; }
     [SerializeField] GameState initialState;
@@ -28,19 +27,12 @@ public class GameManager : Singleton<GameManager>
 
     void Start()
     {
-        initialState = State;
+        State = initialState;
+        GameStateChange(State);
     }
 
     void Update()
     {
-        GameStateChange(GameState.Starting);
-    }
-
-    public void GameStateChange(GameState newState)
-    {
-        OnBeforeGameStateChange?.Invoke(newState);
-
-        State = newState;
         switch (State)
         {
             case GameState.Starting:
@@ -49,6 +41,7 @@ public class GameManager : Singleton<GameManager>
                 GamePlaying();
                 break;
             case GameState.Paused:
+                GamePaused();
                 break;
             case GameState.PacmanPowerUp:
                 break;
@@ -59,6 +52,13 @@ public class GameManager : Singleton<GameManager>
             case GameState.GameOver:
                 break;
         }
+    }
+
+    public void GameStateChange(GameState newState)
+    {
+        OnBeforeGameStateChange?.Invoke(newState);
+
+        State = newState;
 
         OnAfterGameStateChange?.Invoke(newState);
     }
@@ -66,5 +66,10 @@ public class GameManager : Singleton<GameManager>
     void GamePlaying()
     {
         OnGamePlaying?.Invoke();
+    }
+
+    void GamePaused()
+    {
+
     }
 }

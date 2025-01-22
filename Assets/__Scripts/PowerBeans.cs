@@ -3,13 +3,8 @@ using UnityEngine;
 public class PowerBeans : Bean
 {
 
-    void Start()
+    protected override void OnTriggerEnter2D(Collider2D other)
     {
-        
-    }
-
-    void Update()
-    {
-        
+        base.OnTriggerEnter2D(other);
     }
 }

@@ -11,6 +11,16 @@ public class Pacman : MonoBehaviour
     [SerializeField] List<Vector2> OpenPath = new List<Vector2>();
     Vector2 moveInput;
 
+    void Awake()
+    {
+        GameManager.OnGamePlaying += OnGamePlaying;
+    }
+
+    void OnDestroy()
+    {
+        GameManager.OnGamePlaying -= OnGamePlaying;
+    }
+
     void Start()
     {
         OpenPath.Clear();
@@ -18,7 +28,7 @@ public class Pacman : MonoBehaviour
         OpenPath.Add(Vector2.right);
     }
 
-    void Update()
+    void OnGamePlaying()
     {
         MovementProcess();
     }
@@ -109,18 +119,6 @@ public class Pacman : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        //if (!other.CompareTag("Intersection"))
-        //{
-        //    return;
-        //}
 
-        //var intersection = other.GetComponent<Intersection>();
-        //transform.position = intersection.transform.position;
-
-        //OpenPath.Clear();
-        //foreach (var path in intersection.OpenPath)
-        //{
-        //    OpenPath.Add(path);
-        //}
     }
 }

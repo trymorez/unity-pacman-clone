@@ -1,5 +1,5 @@
 
-# Pacman Clone V 0.45
+# Pacman Clone V 0.5
 
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
@@ -26,6 +26,10 @@ Just as important as the ghosts' movement AI is the implementation of their beha
                                                              
 
 ## Version History (버전 내역)
+**V 0.5  - (2025-01-22)**
+- Pacman movement routine implemented
+- Ghost chasing routine implemented
+
 **V 0.45  - (2025-01-21)**
 - Started testing the movement of Pacman
 

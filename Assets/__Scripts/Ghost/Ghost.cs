@@ -19,9 +19,13 @@ public class Ghost : MonoBehaviour
         Fleeing,
         ReturnHome,
     }
+    [SerializeField] Transform pacman;
     [SerializeField] float timeHome = 5f;
     [SerializeField] float timeExiting = 2f;
     [SerializeField] float timeScattering = 5f;
+    float timeScatteringSpent = 0f;
+    [SerializeField] float timeChasing = 20f;
+    float timeChasingSpent = 0f;
 
     [SerializeField] Sprite[] eyes;
     [SerializeField] SpriteRenderer eyeRenderer; 
@@ -64,6 +68,7 @@ public class Ghost : MonoBehaviour
                 GhostScattering();
                 break;
             case GhostState.Chasing:
+                GhostChasing();
                 break;
             case GhostState.Fleeing:
                 break;
@@ -101,17 +106,64 @@ public class Ghost : MonoBehaviour
                 break;
             case GhostState.Scattering:
                 directionDecided = false;
+                timeScatteringSpent = 0;
+                break;
+            case GhostState.Chasing:
+                directionDecided = false;
+                timeChasingSpent = 0;
                 break;
         }
     }
 
+    #region --- Chasing ---
+    void GhostChasing()
+    {
+        timeChasingSpent += Time.deltaTime;
 
+        direction = CheckDirectionToChase();
+        DrawEyes(direction);
+        transform.Translate(direction * moveSpeed * Time.deltaTime);
+    }
+
+    Vector2 CheckDirectionToChase()
+    {
+        if (directionDecided == true)
+        {
+            return direction;
+        }
+
+        Vector2 currentPos = transform.position;
+        Vector2 bestDirection = Vector2.zero;
+        float minDistance = float.MaxValue;
+
+        foreach (var dir in OpenPath)
+        {
+            //prevent to go back
+            if (dir == -direction)
+            {
+                continue;
+            }
+            Vector2 newPos = currentPos + dir * 2f;
+            float distance = Vector2.Distance(newPos, pacman.position);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                bestDirection = dir;
+            }
+        }
+        directionDecided = true;
+        return bestDirection;
+    }
+    #endregion
     #region --- Scattering ---
     [SerializeField] List<Vector2> OpenPath = new List<Vector2>();
     [SerializeField] bool directionDecided = false;
 
     void GhostScattering()
     {
+        timeScatteringSpent += Time.deltaTime;
+
         direction = CheckDirectionToScatter();
         DrawEyes(direction);
         transform.Translate(direction * moveSpeed * Time.deltaTime);
@@ -150,6 +202,7 @@ public class Ghost : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        
         if (!other.CompareTag("Intersection"))
         {
             return;
@@ -164,6 +217,26 @@ public class Ghost : MonoBehaviour
         {
             OpenPath.Add(path);
         }
+
+        if (State == GhostState.Scattering)
+        {
+            Debug.Log(timeScatteringSpent);
+            if (timeScatteringSpent >= timeScattering)
+            {
+                Debug.Log("Mode Change! -> Chasing");
+                GhostStateChange(GhostState.Chasing);
+            }
+        }
+        else if (State == GhostState.Chasing)
+        {
+            Debug.Log(timeChasingSpent);
+            if (timeChasingSpent >= timeChasing)
+            {
+                Debug.Log("Mode Change! -> Scattering");
+                GhostStateChange(GhostState.Scattering);
+            }
+        }
+
     }
 
     #endregion

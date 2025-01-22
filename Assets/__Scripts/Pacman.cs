@@ -46,31 +46,28 @@ public class Pacman : MonoBehaviour
         }
         else if (moveInput != Vector2.zero)
         {
-            if (DirectionOpen(moveInput))
+            if (CheckIfDirectionOpen(moveInput))
             {
-                MovementRestrict(currentPos);
+                IntersectionGet();
             }
         }
     }
 
-    void MovementRestrict(Vector2 currentPos)
+    void IntersectionGet()
     {
         var moveVector = moveInput.normalized;
-        targetPos = (Vector2)currentPos + (moveVector * 1.5f);
+        var origin = (Vector2)transform.position + moveVector * 0.8f;
+        var layLenth = 12f;
 
-        if (currentPos.x == -10.5 && moveVector == Vector2.left)
-            targetPos.x = -12.5f;
-        else if (currentPos.x == -12.5 && moveVector == Vector2.right)
-            targetPos.x = -10.5f;
-        else if (currentPos.x == 10.5 && moveVector == Vector2.right)
-            targetPos.x = 12.5f;
-        else if (currentPos.x == 12.5 && moveVector == Vector2.left)
-            targetPos.x = 10.5f;
-        if (currentPos.y == 11 && moveVector == Vector2.up)
-            targetPos.y = 13.5f;
-        if (currentPos.y == 13.5 && moveVector == Vector2.down)
-            targetPos.y = 11;
-        directionDecided = true;
+        var ray = Physics2D.Raycast(origin, moveVector, layLenth, intersectionLayer);
+        Debug.DrawLine(origin, origin + moveVector * layLenth, Color.red);
+        if (ray.collider)
+        {
+            targetPos = ray.collider.transform.position;
+            PacmanRotate(moveVector);
+            Debug.Log(targetPos);
+            directionDecided = true;
+        }
     }
 
     public void OnMove(InputAction.CallbackContext callback)
@@ -78,7 +75,7 @@ public class Pacman : MonoBehaviour
         moveInput = callback.ReadValue<Vector2>();
     }
 
-    bool DirectionOpen(Vector2 moveInput)
+    bool CheckIfDirectionOpen(Vector2 moveInput)
     {
         var vectorToCheck = moveInput.normalized;
         var origin = (Vector2)transform.position + vectorToCheck * 0.8f;
@@ -86,8 +83,28 @@ public class Pacman : MonoBehaviour
 
         var ray = Physics2D.Raycast(origin, vectorToCheck, layLenth, wallLayer);
         Debug.DrawLine(origin, origin + vectorToCheck * layLenth, Color.red);
-        Debug.Log(ray.collider == null);
         return (ray.collider == null);
+    }
+
+    void PacmanRotate(Vector2 dir)
+    {
+        if (dir == Vector2.up)
+        {
+            transform.eulerAngles = new Vector3(0, 0, 90);
+        }
+        if (dir == Vector2.down)
+        {
+            transform.eulerAngles = new Vector3(0, 0, -90);
+        }
+        if (dir == Vector2.left)
+        {
+            transform.eulerAngles = new Vector3(0, 0, 180);
+        }
+        if (dir == Vector2.right)
+        {
+            transform.eulerAngles = new Vector3(0, 0, 0);
+        }
+
     }
 
     void OnTriggerEnter2D(Collider2D other)

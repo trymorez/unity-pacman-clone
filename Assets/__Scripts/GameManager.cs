@@ -9,20 +9,29 @@ public class GameManager : Singleton<GameManager>
 
     public static Action<GameState> OnBeforeGameStateChange;
     public static Action<GameState> OnAfterGameStateChange;
+    public static Action OnGamePlaying;
+
     
     public GameState State { get; private set; }
+    [SerializeField] GameState initialState;
     public enum GameState 
     { 
-        Starting = 0,
-        Started = 1,
-        PacmanPowerUp = 2,
-        PacmanDying = 3,
-        LevelCompleted = 4,
-        GameOver = 5,
+        Starting,
+        Playing,
+        Paused,
+        PacmanPowerUp,
+        PacmanDying,
+        LevelCompleted,
+        GameOver,
     }
     public bool gameInProgress = true;
 
     void Start()
+    {
+        initialState = State;
+    }
+
+    void Update()
     {
         GameStateChange(GameState.Starting);
     }
@@ -36,7 +45,10 @@ public class GameManager : Singleton<GameManager>
         {
             case GameState.Starting:
                 break;
-            case GameState.Started:
+            case GameState.Playing:
+                GamePlaying();
+                break;
+            case GameState.Paused:
                 break;
             case GameState.PacmanPowerUp:
                 break;
@@ -49,5 +61,10 @@ public class GameManager : Singleton<GameManager>
         }
 
         OnAfterGameStateChange?.Invoke(newState);
+    }
+
+    void GamePlaying()
+    {
+        OnGamePlaying?.Invoke();
     }
 }

@@ -16,6 +16,7 @@ public class Bean : MonoBehaviour
     {
         if (other.CompareTag("Pacman"))
         {
+            SoundManager.Play("Bean");
             BeanManager.Beans--;
             GameManager.Score += score;
             OnScoreUpdate?.Invoke(GameManager.Score);

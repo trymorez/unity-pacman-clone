@@ -30,14 +30,15 @@ public class UIManager : MonoBehaviour
 
             if (GM.State == GameManager.GameState.Playing)
             {
-                Debug.Log("Esc pressed " + GameManager.Instance.State);
                 GM.GameStateChange(GameManager.GameState.Paused);
                 menuPanel.SetActive(true);
+                Time.timeScale = 0f;
             }
             else if (GM.State == GameManager.GameState.Paused)
             {
                 GM.GameStateChange(GameManager.GameState.Playing);
                 menuPanel.SetActive(false);
+                Time.timeScale = 1.0f;
             }
         }
     }

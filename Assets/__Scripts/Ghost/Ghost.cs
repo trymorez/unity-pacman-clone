@@ -27,9 +27,14 @@ public class Ghost : MonoBehaviour
     float timeScatteringSpent = 0f;
     [SerializeField] float timeChasing = 20f;
     float timeChasingSpent = 0f;
+    [SerializeField] float timeFleeing = 15f;
+    float timeFleeingSpent = 0f;
 
     [SerializeField] Sprite[] eyes;
     [SerializeField] SpriteRenderer eyeRenderer; 
+    [SerializeField] SpriteRenderer bodyRenderer; 
+    [SerializeField] SpriteRenderer blueRenderer; 
+    [SerializeField] SpriteRenderer whiteRenderer; 
     [SerializeField] float moveSpeed = 5f;
     [SerializeField] LayerMask wallLayer;
     [SerializeField] Vector2 direction = Vector2.up;
@@ -48,6 +53,8 @@ public class Ghost : MonoBehaviour
     void Awake()
     {
         GameManager.OnGamePlaying += OnGamePlaying;
+        GameManager.OnPowerUpFading += OnPowerUpFading;
+        GameManager.OnBeforeGameStateChange += OnBeforeGameStateChange;
         ghostBounds = GetComponent<Collider2D>().bounds;
         rb = GetComponent<Rigidbody2D>();
     }
@@ -55,6 +62,8 @@ public class Ghost : MonoBehaviour
     void OnDestroy()
     {
         GameManager.OnGamePlaying -= OnGamePlaying;
+        GameManager.OnPowerUpFading -= OnPowerUpFading;
+        GameManager.OnBeforeGameStateChange -= OnBeforeGameStateChange;
     }
 
     void Start()
@@ -79,6 +88,7 @@ public class Ghost : MonoBehaviour
                 GhostChasing();
                 break;
             case GhostState.Fleeing:
+                GhostFleeing();
                 break;
             case GhostState.ReturnHome:
                 break;
@@ -120,8 +130,66 @@ public class Ghost : MonoBehaviour
                 directionDecided = false;
                 timeChasingSpent = 0;
                 break;
+            case GhostState.Fleeing:
+                directionDecided = false;
+                timeFleeingSpent = 0;
+                break;
         }
     }
+
+    GhostState beforeState;
+    void OnBeforeGameStateChange(GameManager.GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.Starting:
+                break;
+            case GameState.Playing:
+                if (State == GhostState.Fleeing)
+                {
+                    Debug.Log("back to normal");
+                    GhostStateChange(beforeState);
+                    GhostSetSprite(true, true, false, false);
+                }
+                break;
+            case GameState.Paused:
+                break;
+            case GameState.PacmanPowerUp:
+                if (State != GhostState.ReturnHome)
+                {
+                    beforeState = State;
+                    GhostStateChange(GhostState.Fleeing);
+                    GhostSetSprite(false, false, true, false);
+                }
+                break;
+            case GameState.PacmanDying:
+                break;
+            case GameState.LevelCompleted:
+                break;
+            case GameState.GameOver:
+                break;
+        }
+    }
+
+    void OnPowerUpFading()
+    {
+        GhostSetSprite(false, false, false, true);
+    }
+
+    void GhostSetSprite(bool eye, bool body, bool blue, bool white)
+    {
+        eyeRenderer.enabled = eye;
+        bodyRenderer.enabled = body;
+        blueRenderer.enabled = blue;
+        whiteRenderer.enabled = white;
+    }
+
+    #region --- Fleeing ---
+    void GhostFleeing()
+    {
+
+    }
+    #endregion
 
     #region --- Chasing ---
     void GhostChasing()
@@ -261,7 +329,10 @@ public class Ghost : MonoBehaviour
     #region --- In Home ---
     void GhostInHome()
     {
-        stayingHomeTime += Time.deltaTime;
+        if (GameManager.Instance.State != GameState.PacmanPowerUp)
+        {
+            stayingHomeTime += Time.deltaTime;
+        }
 
         transform.Translate(direction * moveSpeed * Time.deltaTime);
 
@@ -370,15 +441,5 @@ public class Ghost : MonoBehaviour
         }
 
         eyeRenderer.sprite = eyes[eyeIndex];
-    }
-
-    void TranslateX(float moveOffsetX)
-    {
-        transform.Translate(moveOffsetX, transform.position.y, 0);
-    }
-
-    void TranslateY(float moveOffsetY)
-    {
-        transform.Translate(transform.position.x, moveOffsetY, 0);
     }
 }

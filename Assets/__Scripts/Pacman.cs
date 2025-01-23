@@ -10,7 +10,7 @@ public class Pacman : MonoBehaviour
     [SerializeField] float moveSpeed = 0.5f;
     [SerializeField] List<Vector2> OpenPath = new List<Vector2>();
     Vector2 moveInput;
-
+    
     void Awake()
     {
         GameManager.OnGamePlaying += OnGamePlaying;
@@ -75,7 +75,7 @@ public class Pacman : MonoBehaviour
         {
             targetPos = ray.collider.transform.position;
             PacmanRotate(moveVector);
-            Debug.Log(targetPos);
+            //Debug.Log(targetPos);
             directionDecided = true;
         }
     }

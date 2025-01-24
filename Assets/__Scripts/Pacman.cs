@@ -30,17 +30,15 @@ public class Pacman : MonoBehaviour
 
     void OnGamePlaying()
     {
-        MovementProcess();
+        ProcessMovement();
     }
 
     bool directionDecided = false;
     Vector2 targetPos;
-    Vector2 internalPos;
 
-    void MovementProcess()
+    void ProcessMovement()
     {
         var currentPos = transform.position;
-
         if (directionDecided)
         {
             //arrived at destination
@@ -75,7 +73,6 @@ public class Pacman : MonoBehaviour
         {
             targetPos = ray.collider.transform.position;
             PacmanRotate(moveVector);
-            //Debug.Log(targetPos);
             directionDecided = true;
         }
     }
@@ -119,6 +116,15 @@ public class Pacman : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.CompareTag("Portal"))
+        {
+            HandlePortal(other);
+        }
+    }
 
+    void HandlePortal(Collider2D other)
+    {
+        transform.position = other.GetComponent<Portal>().otherPortal.position;
+        directionDecided = false;
     }
 }

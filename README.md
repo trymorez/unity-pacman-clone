@@ -1,5 +1,5 @@
 
-# Pacman Clone V 0.7
+# Pacman Clone V 0.8
 
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
@@ -22,10 +22,14 @@ Just as important as the ghosts' movement AI is the implementation of their beha
 
 ## Screenshots (스크린샷)
 
-![screenshot](Assets/Screenshot/screenshot-V0.4.png)
+![screenshot](Assets/Screenshot/screenshot-V0.8(1).png)
+![screenshot](Assets/Screenshot/screenshot-V0.8(2).png)
                                                              
 
 ## Version History (버전 내역)
+**V 0.8 - (2025-01-24)**
+- Started testing pacman eating ghosts routine
+
 **V 0.7 - (2025-01-23)**
 - Started testing power beans routine
 

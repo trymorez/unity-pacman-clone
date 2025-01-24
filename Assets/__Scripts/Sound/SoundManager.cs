@@ -39,7 +39,7 @@ public class SoundManager : Singleton<SoundManager>
             return;
         }
 
-        if (audioSource.isPlaying && audioStop.IsActive())
+        if (audioSource.isPlaying && audioStop != null && audioStop.IsActive())
         {
             audioStop.Kill();
         }

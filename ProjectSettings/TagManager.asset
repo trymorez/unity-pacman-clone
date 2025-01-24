@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Intersection
   - Pacman
+  - Portal
   layers:
   - Default
   - TransparentFX

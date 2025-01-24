@@ -18,7 +18,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] float PowerUpFadeTime = 3;
     [SerializeField] float PowerUpTimeSpent = 0;
 
-    public GameState State { get; private set; }
+    public static GameState State { get; private set; }
     [SerializeField] GameState initialState;
     public enum GameState 
     { 
@@ -52,7 +52,7 @@ public class GameManager : Singleton<GameManager>
                 GamePaused();
                 break;
             case GameState.PacmanPowerUp:
-                GamePacmanPowerUp();
+                GamePowerUp();
                 break;
             case GameState.PacmanDying:
                 break;
@@ -84,7 +84,7 @@ public class GameManager : Singleton<GameManager>
             case GameState.Paused:
                 break;
             case GameState.PacmanPowerUp:
-                SoundManager.PlayforDuration("PowerUp", PowerUpTime);
+                SoundManager.PlayforDuration("PowerUp", PowerUpTime - 0.1f);
                 PowerUpTimeSpent = 0;
                 PowerUpFading = false;
                 break;
@@ -107,7 +107,14 @@ public class GameManager : Singleton<GameManager>
 
     }
         
-    void GamePacmanPowerUp()
+    void GamePowerUp()
+    {
+        ProcessPowerUpTime();
+
+        OnGamePlaying?.Invoke();
+    }
+
+    void ProcessPowerUpTime()
     {
         PowerUpTimeSpent += Time.deltaTime;
         if (PowerUpTimeSpent >= PowerUpTime && !PowerUpFading)
@@ -121,6 +128,5 @@ public class GameManager : Singleton<GameManager>
             GameStateChange(GameState.Playing);
             Debug.Log("back to playing");
         }
-        OnGamePlaying?.Invoke();
     }
 }

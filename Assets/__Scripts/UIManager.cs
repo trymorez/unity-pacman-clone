@@ -28,13 +28,13 @@ public class UIManager : MonoBehaviour
         if (context.performed)
         {
 
-            if (GM.State == GameManager.GameState.Playing)
+            if (GameManager.State == GameManager.GameState.Playing)
             {
                 GM.GameStateChange(GameManager.GameState.Paused);
                 menuPanel.SetActive(true);
                 Time.timeScale = 0f;
             }
-            else if (GM.State == GameManager.GameState.Paused)
+            else if (GameManager.State == GameManager.GameState.Paused)
             {
                 GM.GameStateChange(GameManager.GameState.Playing);
                 menuPanel.SetActive(false);

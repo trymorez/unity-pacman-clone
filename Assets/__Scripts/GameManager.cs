@@ -8,6 +8,7 @@ public class GameManager : Singleton<GameManager>
     public static int Life = 3;
     public static int Score = 0;
     public static int HighScore = 0;
+    public static int Level = 0;
 
     public static Action<GameState> OnBeforeGameStateChange;
     public static Action<GameState> OnAfterGameStateChange;
@@ -80,10 +81,12 @@ public class GameManager : Singleton<GameManager>
             case GameState.Starting:
                 break;
             case GameState.Playing:
+                SoundManager.PlayLoop("Warning");
                 break;
             case GameState.Paused:
                 break;
             case GameState.PacmanPowerUp:
+                SoundManager.StopLoop(SoundManager.loopingClip);
                 SoundManager.PlayforDuration("PowerUp", PowerUpTime - 0.1f);
                 PowerUpTimeSpent = 0;
                 PowerUpFading = false;
@@ -121,7 +124,7 @@ public class GameManager : Singleton<GameManager>
         {
             PowerUpFading = true;
             OnPowerUpFading?.Invoke();
-            SoundManager.PlayforDuration("Fading", PowerUpFadeTime);
+            SoundManager.PlayforDuration("Fading", PowerUpFadeTime - 0.1f);
         }
         if (PowerUpTimeSpent >= PowerUpTime + PowerUpFadeTime)
         {

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 using static GameManager;
 
 public class Ghost : MonoBehaviour
@@ -47,6 +48,8 @@ public class Ghost : MonoBehaviour
     Rigidbody2D rb;
     float stayingHomeTime;
     bool moveBetweenSlot;
+    bool eatenOnce;
+
     [SerializeField] List<Vector2> OpenPath = new List<Vector2>();
     [SerializeField] bool directionPicked = false;
 
@@ -94,6 +97,7 @@ public class Ghost : MonoBehaviour
                 GhostFleeing();
                 break;
             case GhostState.ReturnHome:
+                GhostReturning();
                 break;
         }
     }
@@ -126,16 +130,15 @@ public class Ghost : MonoBehaviour
                 OpenPath.Add(Vector2.right);
                 break;
             case GhostState.Scattering:
-                //directionPicked = false;
                 timeScatteringSpent = 0;
                 break;
             case GhostState.Chasing:
-                //directionPicked = false;
                 timeChasingSpent = 0;
                 break;
             case GhostState.Fleeing:
-                //directionPicked = false;
                 timeFleeingSpent = 0;
+                break;
+            case GhostState.ReturnHome:
                 break;
         }
     }
@@ -153,7 +156,7 @@ public class Ghost : MonoBehaviour
                     Debug.Log("back to normal");
                     GhostStateChange(savedState);
                 }
-                GhostSetSprite(true, true, false, false);
+                SetGhostSprite(true, true, false, false);
                 break;
             case GameState.Paused:
                 break;
@@ -161,9 +164,10 @@ public class Ghost : MonoBehaviour
                 if (State == GhostState.Scattering || State == GhostState.Chasing)
                 {
                     savedState = State;
+                    eatenOnce = false;
                     GhostStateChange(GhostState.Fleeing);
                 }
-                GhostSetSprite(false, false, true, false);
+                SetGhostSprite(false, false, true, false);
                 break;
             case GameState.PacmanDying:
                 break;
@@ -176,18 +180,99 @@ public class Ghost : MonoBehaviour
 
     void OnPowerUpFading()
     {
-        GhostSetSprite(false, false, false, true);
+        if (State == GhostState.Fleeing)
+        {
+            SetGhostSprite(false, false, false, true);
+        }
     }
 
-    void GhostSetSprite(bool eye, bool body, bool blue, bool white)
+    void SetGhostSprite(bool eye, bool body, bool blueBody, bool whiteBody)
     {
         eyeRenderer.enabled = eye;
         bodyRenderer.enabled = body;
-        blueRenderer.enabled = blue;
-        whiteRenderer.enabled = white;
+        blueRenderer.enabled = blueBody;
+        whiteRenderer.enabled = whiteBody;
+    }
+    #region --- returning ---
+    void GhostReturning()
+    {
+        float minDistance = 0.1f;
+        float eyeVelocity = 3.0f;
+
+        direction = CheckDirectionToReturn();
+        SetGhostSprite(true, false, false, false);
+        DrawEyes(direction);
+        transform.Translate(direction * moveSpeed * Time.deltaTime * eyeVelocity);
+
+        if (Vector2.Distance(transform.position, returnPoint.position) <= minDistance)
+        {
+            ReturnedToHome();
+        }
     }
 
-    #region --- Fleeing ---
+    void ReturnedToHome()
+    {
+        SetGhostSprite(true, true, false, false);
+        GhostStateChange(GhostState.InHome);
+        direction = Vector2.up;
+        if (!Home.Instance.GhostInSlot[1])
+        {
+            PutToSlot(1);
+        }
+        else if (!Home.Instance.GhostInSlot[0])
+        {
+            PutToSlot(0);
+        }
+        else if (!Home.Instance.GhostInSlot[2])
+        {
+            PutToSlot(2);
+        }
+        else
+        {
+            direction = Vector2.left;
+            GhostStateChange(GhostState.Chasing);
+        }
+    }
+
+    void PutToSlot(int index)
+    {
+        currentSlot = index;
+        Home.Instance.GhostInSlot[index] = true;
+        transform.position = new Vector3(Home.Instance.SlotXPos[index], 0, 0);
+    }
+
+    Vector2 CheckDirectionToReturn()
+    {
+        if (directionPicked == true)
+        {
+            return direction;
+        }
+
+        Vector2 currentPos = transform.position;
+        Vector2 bestDirection = Vector2.zero;
+        float minDistance = float.MaxValue;
+
+        foreach (var dir in OpenPath)
+        {
+            //prevent to go back
+            if (dir == -direction)
+            {
+                continue;
+            }
+            Vector2 newPos = currentPos + dir * 2f;
+            float distance = Vector2.Distance(newPos, returnPoint.position);
+
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                bestDirection = dir;
+            }
+        }
+        directionPicked = true;
+        return bestDirection;
+    }
+    #endregion
+    #region --- fleeing ---
     void GhostFleeing()
     {
         timeFleeingSpent += Time.deltaTime;
@@ -227,7 +312,7 @@ public class Ghost : MonoBehaviour
         return bestDirection;
     }
     #endregion
-    #region --- Chasing ---
+    #region --- chasing ---
     void GhostChasing()
     {
         timeChasingSpent += Time.deltaTime;
@@ -268,7 +353,7 @@ public class Ghost : MonoBehaviour
         return bestDirection;
     }
     #endregion
-    #region --- Scattering ---
+    #region --- scattering ---
 
 
     void GhostScattering()
@@ -311,7 +396,7 @@ public class Ghost : MonoBehaviour
         return bestDirection;
     }
     #endregion
-    #region --- Exiting Home ---
+    #region --- exiting home ---
     void GhostExitingHome()
     {
         float exitPos = Home.Instance.SlotExitYPos;
@@ -329,10 +414,11 @@ public class Ghost : MonoBehaviour
     #region --- In Home ---
     void GhostInHome()
     {
-        if (GameManager.State != GameState.PacmanPowerUp)
-        {
-            stayingHomeTime += Time.deltaTime;
-        }
+        //if (GameManager.State != GameState.PacmanPowerUp)
+        //{
+        //    stayingHomeTime += Time.deltaTime;
+        //}
+        stayingHomeTime += Time.deltaTime;
 
         transform.Translate(direction * moveSpeed * Time.deltaTime);
 
@@ -363,8 +449,8 @@ public class Ghost : MonoBehaviour
     {
         float layLength = 0.7f;
 
-        Vector2 startPos = transform.position + (Vector3)(ghostBounds.extents * direction);
-        RaycastHit2D hit = Physics2D.Raycast(startPos, direction, layLength, wallLayer);
+        var startPos = transform.position + (Vector3)(ghostBounds.extents * direction);
+        var hit = Physics2D.Raycast(startPos, direction, layLength, wallLayer);
 
         if (hit.collider != null)
         {
@@ -456,15 +542,18 @@ public class Ghost : MonoBehaviour
         }
         if (other.CompareTag("Pacman"))
         {
-            HandlePacman();
+            HandleEaten();
         }
     }
 
-    void HandlePacman()
+    void HandleEaten()
     {
-        if (GameManager.State == GameManager.GameState.PacmanPowerUp)
+        if (GameManager.State == GameManager.GameState.PacmanPowerUp &&
+            eatenOnce == false)
         {
+            eatenOnce = true;
             SoundManager.Play("GhostEaten");
+            GhostStateChange(GhostState.ReturnHome);
         }
     }
 

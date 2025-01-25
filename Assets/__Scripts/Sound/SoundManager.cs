@@ -9,7 +9,7 @@ public class SoundManager : Singleton<SoundManager>
 {
     static AudioSource audioSource;
     static SoundData soundData;
-    static AudioClip loopingClip;
+    public static AudioClip loopingClip;
     float volume = 0.2f;
     static Tween audioStop;
 

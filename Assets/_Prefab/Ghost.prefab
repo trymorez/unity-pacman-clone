@@ -162,8 +162,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstState: 0
   scatterPoint: {fileID: 0}
+  returnPoint: {fileID: 0}
   pacman: {fileID: 0}
-  timeHome: 5
+  timeHome: 2
   timeExiting: 2
   timeScattering: 5
   timeChasing: 20
@@ -185,7 +186,7 @@ MonoBehaviour:
   eyeDirection: {x: 0, y: 1}
   currentSlot: 0
   OpenPath: []
-  directionDecided: 0
+  directionPicked: 0
 --- !u!50 &5960743063483244888
 Rigidbody2D:
   serializedVersion: 5
@@ -211,7 +212,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &5420614231435423045
 BoxCollider2D:
@@ -257,7 +258,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.1, y: 0.1}
+  m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
 --- !u!1 &1553658778366826405
 GameObject:

@@ -11,8 +11,6 @@ In my previous project, Space Invaders, I used coroutines as the main routine an
 
 Just as important as the ghosts' movement AI is the implementation of their behavior patterns. The ghosts in Pac-Man move with completely different and unique behavior patterns based on various AI states (idle, chase, scatter, frightened, and eye-only). Implementing these behaviors as state patterns will make maintenance easier, enhance scalability, and provide a basic framework for AI agents in future games.
 
-**The game is not working condition yet.**
-
 - Recommended Unity version: Unity 6 (6000.0.32f1 and later)
 
 
@@ -27,6 +25,12 @@ Just as important as the ghosts' movement AI is the implementation of their beha
                                                              
 
 ## Version History (버전 내역)
+**V 0.9 - (2025-01-25)**
+- Added background sound effect
+- Modified to prevent eating the same ghost multiple times
+- Displayed a READY message when starting a level
+- Ghosts can exit the home even when they are in a blue state
+
 **V 0.8 - (2025-01-24)**
 - Started testing pacman eating ghosts routine
 

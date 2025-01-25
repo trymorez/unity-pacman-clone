@@ -7,7 +7,7 @@ public class SoundData : MonoBehaviour
     [SerializeField] SoundFXData[] soundFXData;
     Dictionary<string, List<AudioClip>> soundDictionary;
 
-    void Start()
+    void Awake()
     {
         DictionaryInit();
     }

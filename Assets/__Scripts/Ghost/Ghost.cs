@@ -1,10 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 using static GameManager;
 
 public class Ghost : MonoBehaviour
@@ -55,8 +53,9 @@ public class Ghost : MonoBehaviour
 
     public static Action<GhostState> OnBeforeGhostStateChange;
     public static Action<GhostState> OnAfterGhostStateChange;
-    
-    void Awake()
+    public static Action<Vector2> OnGhostEaten;
+
+void Awake()
     {
         GameManager.OnGamePlaying += OnGamePlaying;
         GameManager.OnPowerUpFading += OnPowerUpFading;
@@ -161,10 +160,10 @@ public class Ghost : MonoBehaviour
             case GameState.Paused:
                 break;
             case GameState.PacmanPowerUp:
+                eatenOnce = false;
                 if (State == GhostState.Scattering || State == GhostState.Chasing)
                 {
                     savedState = State;
-                    eatenOnce = false;
                     GhostStateChange(GhostState.Fleeing);
                 }
                 SetGhostSprite(false, false, true, false);
@@ -552,6 +551,7 @@ public class Ghost : MonoBehaviour
             eatenOnce == false)
         {
             eatenOnce = true;
+            OnGhostEaten?.Invoke(transform.position);
             SoundManager.Play("GhostEaten");
             GhostStateChange(GhostState.ReturnHome);
         }

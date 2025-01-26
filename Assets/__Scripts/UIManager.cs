@@ -17,12 +17,14 @@ public class UIManager : MonoBehaviour
     void Awake()
     {
         Bean.OnScoreUpdate += OnScoreUpdate;
+        GameManager.OnScoreUpdate += OnScoreUpdate;
         GameManager.OnBeforeGameStateChange += OnBeforeGameStateChange;
     }
 
     void OnDestroy()
     {
         Bean.OnScoreUpdate -= OnScoreUpdate;
+        GameManager.OnScoreUpdate -= OnScoreUpdate;
         GameManager.OnBeforeGameStateChange -= OnBeforeGameStateChange;
     }
 
@@ -56,7 +58,7 @@ public class UIManager : MonoBehaviour
 
     void DisplayReady()
     {
-        readyText.DOScale(Vector3.zero, 1f).SetDelay(1f);
+        readyText.DOScale(Vector3.zero, 1f).SetDelay(0.1f);
     }
 
 

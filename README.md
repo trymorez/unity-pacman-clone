@@ -1,5 +1,5 @@
 
-# Pacman Clone V 1.1
+# Pacman Clone V 1.2
 
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
@@ -25,6 +25,9 @@ Just as important as the ghosts' movement AI is the implementation of their beha
                                                              
 
 ## Version History (버전 내역)
+**V 1.2 - (2025-01-27)**
+- Level progression has been implemented
+
 **V 1.1 - (2025-01-27)**
 - Display Pac-Man's lives (default is 3)
 - Now Pac-Man can die if caught by a ghost

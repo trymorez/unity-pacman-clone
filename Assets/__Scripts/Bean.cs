@@ -23,7 +23,7 @@ public class Bean : MonoBehaviour
             gameObject.SetActive(false);
             if (BeanManager.Beans == 0)
             {
-                Debug.Log("-- level completed --");
+                GameManager.Instance.NextLevel();
             }
         }
     }

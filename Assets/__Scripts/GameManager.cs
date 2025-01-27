@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
-using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : Singleton<GameManager>
 {
@@ -190,7 +187,12 @@ public class GameManager : Singleton<GameManager>
         if (PowerUpTimeSpent >= PowerUpTime + PowerUpFadeTime)
         {
             GameStateChange(GameState.Playing);
-            Debug.Log("back to playing");
         }
+    }
+
+    public void NextLevel()
+    {
+        Level++; 
+        SceneManager.LoadScene(0);
     }
 }

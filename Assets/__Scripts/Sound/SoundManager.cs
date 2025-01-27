@@ -66,7 +66,6 @@ public class SoundManager : Singleton<SoundManager>
     { 
         if (audioSource.clip == clip)
         {
-            audioSource.loop = false;
             audioSource.Stop();
         }
     }

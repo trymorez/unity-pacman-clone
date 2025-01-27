@@ -420,7 +420,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 910651300376958291, guid: a3cbedbee01adeb43be2e974fae3b3a0, type: 3}
       propertyPath: m_Name
-      value: Ghost (1)
+      value: Ghost-Red
       objectReference: {fileID: 0}
     - target: {fileID: 1553658778366826405, guid: a3cbedbee01adeb43be2e974fae3b3a0, type: 3}
       propertyPath: m_IsActive
@@ -4562,7 +4562,7 @@ PrefabInstance:
       objectReference: {fileID: 2099008789}
     - target: {fileID: 910651300376958291, guid: a3cbedbee01adeb43be2e974fae3b3a0, type: 3}
       propertyPath: m_Name
-      value: Ghost
+      value: Ghost-Orange
       objectReference: {fileID: 0}
     - target: {fileID: 910651300376958291, guid: a3cbedbee01adeb43be2e974fae3b3a0, type: 3}
       propertyPath: m_IsActive
@@ -16401,7 +16401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 910651300376958291, guid: a3cbedbee01adeb43be2e974fae3b3a0, type: 3}
       propertyPath: m_Name
-      value: Ghost
+      value: Ghost-Cyan
       objectReference: {fileID: 0}
     - target: {fileID: 2825073827314989960, guid: a3cbedbee01adeb43be2e974fae3b3a0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -27441,7 +27441,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 307.75, y: -486.875}
+  m_AnchoredPosition: {x: 9, y: -486.875}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1974692087
@@ -27464,7 +27464,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LEVEL 1
+  m_text: LEVEL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fbe743b11d7dafc428abb5b7ceec88a8, type: 2}
   m_sharedMaterial: {fileID: -1577505705846367232, guid: fbe743b11d7dafc428abb5b7ceec88a8, type: 2}
@@ -29531,7 +29531,7 @@ PrefabInstance:
       objectReference: {fileID: 529883106}
     - target: {fileID: 910651300376958291, guid: a3cbedbee01adeb43be2e974fae3b3a0, type: 3}
       propertyPath: m_Name
-      value: Ghost
+      value: Ghost-Pink
       objectReference: {fileID: 0}
     - target: {fileID: 910651300376958291, guid: a3cbedbee01adeb43be2e974fae3b3a0, type: 3}
       propertyPath: m_IsActive

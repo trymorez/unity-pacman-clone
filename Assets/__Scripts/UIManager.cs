@@ -38,10 +38,11 @@ public class UIManager : MonoBehaviour
         switch (gameState)
         {
             case GameManager.GameState.Starting:
+                DisplayLevel(GameManager.Level);
+                OnScoreUpdate(GameManager.Score);
+                DisplayReady();
                 break;
             case GameManager.GameState.Playing:
-                DisplayLevel(GameManager.Level);
-                DisplayReady();
                 break;
             case GameManager.GameState.Paused:
                 break;
@@ -58,12 +59,13 @@ public class UIManager : MonoBehaviour
 
     void DisplayLevel(int level)
     {
-        levelText.text = "LEVEL " + GameManager.Level + 1.ToString();
+        levelText.text = "LEVEL " + (GameManager.Level + 1);
     }
 
     void DisplayReady()
     {
-        readyText.DOScale(Vector3.zero, 1f).SetDelay(0.1f);
+        if (readyText != null) 
+            readyText.DOScale(Vector3.zero, 1f);
     }
 
 

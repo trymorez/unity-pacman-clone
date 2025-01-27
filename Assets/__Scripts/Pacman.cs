@@ -54,23 +54,24 @@ public class Pacman : MonoBehaviour
         ProcessMovement();
     }
 
-    bool directionDecided = false;
-    Vector2 targetPos;
+    bool directionPicked = false;
+    Vector2 destination;
 
     void ProcessMovement()
     {
         var currentPos = transform.position;
-        if (directionDecided)
+
+        if (directionPicked)
         {
             //arrived at destination
-            if (Vector2.Distance(currentPos, targetPos) < 0.1f)
+            if (Vector2.Distance(currentPos, destination) < 0.1f)
             {
-                directionDecided = false;
-                transform.position = targetPos;
+                directionPicked = false;
+                transform.position = destination;
             }
             else
             {
-                transform.position = Vector2.MoveTowards(currentPos, targetPos, moveSpeed * Time.deltaTime);
+                transform.position = Vector2.MoveTowards(currentPos, destination, moveSpeed * Time.deltaTime);
             }
         }
         else if (moveInput != Vector2.zero)
@@ -92,9 +93,9 @@ public class Pacman : MonoBehaviour
         Debug.DrawLine(origin, origin + moveVector * layLenth, Color.red);
         if (ray.collider)
         {
-            targetPos = ray.collider.transform.position;
+            destination = ray.collider.transform.position;
             PacmanRotate(moveVector);
-            directionDecided = true;
+            directionPicked = true;
         }
     }
 
@@ -137,7 +138,7 @@ public class Pacman : MonoBehaviour
     void HandlePortal(Collider2D other)
     {
         transform.position = other.GetComponent<Portal>().otherPortal.position;
-        directionDecided = false;
+        directionPicked = false;
     }
 
     void HandleDying()
@@ -162,7 +163,7 @@ public class Pacman : MonoBehaviour
     void ResetPacman()
     {
         transform.position = new Vector3(0, -8.5f, 0);
-        directionDecided = false;
+        directionPicked = false;
         moveInput = Vector2.zero;
     }
 }

@@ -3,11 +3,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
 
 public class GameManager : Singleton<GameManager>
 {
-    public static int Life = 3;
+    public static int Life = 2;
     public static int Score = 0;
     public static int HighScore = 0;
     public static int Level = 0;
@@ -18,6 +19,7 @@ public class GameManager : Singleton<GameManager>
     public static Action OnPowerUpFading;
     public static Action<Vector2, int> OnGhostEatenPoint;
     public static Action<int> OnScoreUpdate;
+    public static Action<int> OnLifeUpdate;
 
     [SerializeField] float PowerUpTime = 6;
     [SerializeField] float PowerUpFadeTime = 3;
@@ -25,6 +27,9 @@ public class GameManager : Singleton<GameManager>
 
     public static GameState State { get; private set; }
     [SerializeField] GameState initialState;
+    int ghostEatCount = 0;
+    int ghostEatInitialPoint = 200;
+
     public enum GameState 
     { 
         Starting,
@@ -42,7 +47,13 @@ public class GameManager : Singleton<GameManager>
     {
         base.Awake();
         Ghost.OnGhostEaten += OnGhostEaten;
-        
+    }
+
+    void Start()
+    {
+        State = initialState;
+        OnLifeUpdate?.Invoke(Life);
+        GameStateChange(State);
     }
 
     void OnDestroy()
@@ -50,8 +61,6 @@ public class GameManager : Singleton<GameManager>
         Ghost.OnGhostEaten -= OnGhostEaten;
     }
 
-    int ghostEatCount = 0;
-    int ghostEatInitialPoint = 200;
     void OnGhostEaten(Vector2 pos)
     {
         int point = ghostEatInitialPoint;
@@ -61,12 +70,6 @@ public class GameManager : Singleton<GameManager>
         OnScoreUpdate?.Invoke(Score);
         ghostEatCount++;
         OnGhostEatenPoint?.Invoke(pos, point);
-    }
-
-    void Start()
-    {
-        State = initialState;
-        GameStateChange(State);
     }
 
     void Update()
@@ -128,6 +131,19 @@ public class GameManager : Singleton<GameManager>
                 break;
             case GameState.GameOver:
                 break;
+        }
+    }
+
+    public void DecreaseLife()
+    {
+        if (--Life < 0)
+        {
+            Life = 2;
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            OnLifeUpdate?.Invoke(Life);
         }
     }
 

@@ -74,6 +74,31 @@ void Awake()
     void Start()
     {
         GhostStateChange(firstState);
+        GhostStateSave();
+    }
+
+    Vector2 savedDirection;
+    Vector2 savedEyeDirection;
+    Vector2 savedPosition;
+    int savedCurrentSlot;
+    GhostState savedState;
+
+    void GhostStateSave()
+    {
+        savedDirection = direction;
+        savedEyeDirection = eyeDirection;
+        savedPosition = transform.position;
+        savedCurrentSlot = currentSlot;
+        savedState = State;
+    }
+
+    void GhostStateLoad()
+    {
+        direction = savedDirection;
+        eyeDirection = savedEyeDirection;
+        transform.position = savedPosition;
+        currentSlot = savedCurrentSlot;
+        State = savedState;
     }
 
     void OnGamePlaying()
@@ -142,7 +167,7 @@ void Awake()
         }
     }
 
-    GhostState savedState;
+    GhostState stateBeforeFlee;
     void OnBeforeGameStateChange(GameManager.GameState gameState)
     {
         switch (gameState)
@@ -152,8 +177,11 @@ void Awake()
             case GameState.Playing:
                 if (State == GhostState.Fleeing)
                 {
-                    Debug.Log("back to normal");
-                    GhostStateChange(savedState);
+                    GhostStateChange(stateBeforeFlee);
+                }
+                if (GameManager.State == GameState.PacmanDying)
+                {
+                    GhostStateLoad();
                 }
                 SetGhostSprite(true, true, false, false);
                 break;
@@ -163,7 +191,7 @@ void Awake()
                 eatenOnce = false;
                 if (State == GhostState.Scattering || State == GhostState.Chasing)
                 {
-                    savedState = State;
+                    stateBeforeFlee = State;
                     GhostStateChange(GhostState.Fleeing);
                 }
                 SetGhostSprite(false, false, true, false);
@@ -179,7 +207,8 @@ void Awake()
 
     void OnPowerUpFading()
     {
-        if (State == GhostState.Fleeing)
+        //if (State == GhostState.Fleeing)
+        if (!eatenOnce)
         {
             SetGhostSprite(false, false, false, true);
         }

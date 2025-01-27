@@ -1,7 +1,9 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class Pacman : MonoBehaviour
 {
@@ -9,23 +11,42 @@ public class Pacman : MonoBehaviour
     [SerializeField] LayerMask intersectionLayer;
     [SerializeField] float moveSpeed = 0.5f;
     [SerializeField] List<Vector2> OpenPath = new List<Vector2>();
+    Animator animator;
     Vector2 moveInput;
-    
+    Dictionary<Vector2, Vector3> rotationValue;
+    public static Action<int> OnLifeUpdate;
+    GameManager GM;
+    bool isPowerUp { get { return GameManager.State == GameManager.GameState.PacmanPowerUp; } }
+
     void Awake()
     {
         GameManager.OnGamePlaying += OnGamePlaying;
+        InitRotationValue();
+        animator = GetComponentInChildren<Animator>();
+    }
+
+    void Start()
+    {
+        GM = GameManager.Instance;
+        OpenPath.Clear();
+        OpenPath.Add(Vector2.left);
+        OpenPath.Add(Vector2.right);
+    }
+
+    private void InitRotationValue()
+    {
+        rotationValue = new Dictionary<Vector2, Vector3>
+        {
+            { Vector2.up, new Vector3(0, 0, 90) },
+            { Vector2.down, new Vector3(0, 0, -90) },
+            { Vector2.left, new Vector3(0, 0, 180) },
+            { Vector2.right, new Vector3(0, 0, 0) }
+        };
     }
 
     void OnDestroy()
     {
         GameManager.OnGamePlaying -= OnGamePlaying;
-    }
-
-    void Start()
-    {
-        OpenPath.Clear();
-        OpenPath.Add(Vector2.left);
-        OpenPath.Add(Vector2.right);
     }
 
     void OnGamePlaying()
@@ -56,12 +77,12 @@ public class Pacman : MonoBehaviour
         {
             if (CheckIfDirectionOpen(moveInput))
             {
-                IntersectionGet();
+                GetIntersection();
             }
         }
     }
 
-    void IntersectionGet()
+    void GetIntersection()
     {
         var moveVector = moveInput.normalized;
         var origin = (Vector2)transform.position + moveVector * 0.8f;
@@ -95,23 +116,10 @@ public class Pacman : MonoBehaviour
 
     void PacmanRotate(Vector2 dir)
     {
-        if (dir == Vector2.up)
+        if (rotationValue.ContainsKey(dir))
         {
-            transform.eulerAngles = new Vector3(0, 0, 90);
+            transform.eulerAngles = rotationValue[dir];
         }
-        if (dir == Vector2.down)
-        {
-            transform.eulerAngles = new Vector3(0, 0, -90);
-        }
-        if (dir == Vector2.left)
-        {
-            transform.eulerAngles = new Vector3(0, 0, 180);
-        }
-        if (dir == Vector2.right)
-        {
-            transform.eulerAngles = new Vector3(0, 0, 0);
-        }
-
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -120,11 +128,41 @@ public class Pacman : MonoBehaviour
         {
             HandlePortal(other);
         }
+        if (other.CompareTag("Ghost") && !isPowerUp)
+        {
+            HandleDying();
+        }
     }
 
     void HandlePortal(Collider2D other)
     {
         transform.position = other.GetComponent<Portal>().otherPortal.position;
         directionDecided = false;
+    }
+
+    void HandleDying()
+    {
+        GM.GameStateChange(GameManager.GameState.PacmanDying);
+        animator.SetBool("Dying", true);
+        SoundManager.Play("Dying");
+        
+        StartCoroutine(WaitUntilDead());
+    }
+
+    IEnumerator WaitUntilDead()
+    {
+        yield return new WaitForSecondsRealtime(2.8f);
+
+        animator.SetBool("Dying", false);
+        GM.GameStateChange(GameManager.GameState.Playing);
+        GM.DecreaseLife();
+        ResetPacman();
+    }
+
+    void ResetPacman()
+    {
+        transform.position = new Vector3(0, -8.5f, 0);
+        directionDecided = false;
+        moveInput = Vector2.zero;
     }
 }

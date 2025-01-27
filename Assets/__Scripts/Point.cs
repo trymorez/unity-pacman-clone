@@ -20,7 +20,6 @@ public class Point : MonoBehaviour
     {
         var screenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, pos);
         transform.position = screenPos;
-        Debug.Log(screenPos);
         pointText.text = point.ToString();
         transform.DOScale(Vector3.one, 0.5f);
         transform.DOScale(Vector3.zero, 1f).SetDelay(1f);

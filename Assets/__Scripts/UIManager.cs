@@ -1,9 +1,9 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Collections.Generic;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,12 +12,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI highScoreText;
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] RectTransform readyText;
-    PlayerInput PlayerInput;
+    [SerializeField] RectTransform lifeContainer;
+    [SerializeField] GameObject lifeIcon;
 
     void Awake()
     {
         Bean.OnScoreUpdate += OnScoreUpdate;
         GameManager.OnScoreUpdate += OnScoreUpdate;
+        GameManager.OnLifeUpdate += OnLifeUpdate;
+        Pacman.OnLifeUpdate += OnLifeUpdate;
         GameManager.OnBeforeGameStateChange += OnBeforeGameStateChange;
     }
 
@@ -25,6 +28,8 @@ public class UIManager : MonoBehaviour
     {
         Bean.OnScoreUpdate -= OnScoreUpdate;
         GameManager.OnScoreUpdate -= OnScoreUpdate;
+        GameManager.OnLifeUpdate -= OnLifeUpdate;
+        Pacman.OnLifeUpdate -= OnLifeUpdate;
         GameManager.OnBeforeGameStateChange -= OnBeforeGameStateChange;
     }
 
@@ -87,6 +92,24 @@ public class UIManager : MonoBehaviour
     void OnScoreUpdate(int score)
     {
         scoreText.text = score.ToString();
+    }
+
+    List<GameObject> iconList = new List<GameObject>();
+
+    void OnLifeUpdate(int life)
+    {
+        foreach (var icon in iconList)
+        {
+            Destroy(icon);
+        }
+        iconList.Clear();
+
+        for (int i = 0; i < life; i++)
+        {
+            var icon = Instantiate<GameObject>(lifeIcon);
+            iconList.Add(icon);
+            icon.transform.SetParent(lifeContainer, false);
+        }
     }
 
     void OnHighScoreUpdate()

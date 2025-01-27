@@ -1,5 +1,5 @@
 
-# Pacman Clone V 1.0
+# Pacman Clone V 1.1
 
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
@@ -20,11 +20,15 @@ Just as important as the ghosts' movement AI is the implementation of their beha
 
 ## Screenshots (스크린샷)
 
-![screenshot](Assets/Screenshot/screenshot-V0.8(1).png)
-![screenshot](Assets/Screenshot/screenshot-V0.8(2).png)
+![screenshot](Assets/Screenshot/screenshot-V1.1(1).png)
+![screenshot](Assets/Screenshot/screenshot-V1.1(2).png)
                                                              
 
 ## Version History (버전 내역)
+**V 1.1 - (2025-01-27)**
+- Display Pac-Man's lives (default is 3)
+- Now Pac-Man can die if caught by a ghost
+
 **V 1.0 - (2025-01-26)**
 - Display points when Pac-Man eats ghosts
 

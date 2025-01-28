@@ -62,9 +62,9 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
-    public static void StopLoop(AudioClip clip)
+    public static void StopLoop()
     { 
-        if (audioSource.clip == clip)
+        if (audioSource.clip == loopingClip)
         {
             audioSource.Stop();
         }

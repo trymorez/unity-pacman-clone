@@ -95,8 +95,8 @@ public class GameManager : Singleton<GameManager>
 
     public void GameStateChange(GameState newState)
     {
-        OnBeforeGameStateChange?.Invoke(newState);
         BeforeGameStateChange(newState);
+        OnBeforeGameStateChange?.Invoke(newState);
 
         State = newState;
 
@@ -113,20 +113,15 @@ public class GameManager : Singleton<GameManager>
             case GameState.Playing:
                 SoundManager.PlayLoop("Warning");
                 break;
-            case GameState.Paused:
-                break;
             case GameState.PacmanPowerUp:
-                SoundManager.StopLoop(SoundManager.loopingClip);
+                SoundManager.StopLoop();
                 SoundManager.PlayforDuration("PowerUp", PowerUpTime - 0.1f);
                 ghostEatCount = 0;
                 PowerUpTimeSpent = 0;
                 PowerUpFading = false;
                 break;
             case GameState.PacmanDying:
-                break;
-            case GameState.LevelCompleted:
-                break;
-            case GameState.GameOver:
+                SoundManager.StopLoop();
                 break;
         }
     }
@@ -136,6 +131,8 @@ public class GameManager : Singleton<GameManager>
         if (--Life < 0)
         {
             Life = 2;
+            Score = 0;
+            Level = 0;
             SceneManager.LoadScene(0);
         }
         else

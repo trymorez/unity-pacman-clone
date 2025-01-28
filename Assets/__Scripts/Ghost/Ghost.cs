@@ -41,6 +41,7 @@ public class Ghost : MonoBehaviour
     [SerializeField] Vector2 direction = Vector2.up;
     [SerializeField] Vector2 eyeDirection = Vector2.up;
     [SerializeField] int currentSlot;
+    Dictionary<Vector2, int> eyeSpriteMap;
 
     Bounds ghostBounds;
     Rigidbody2D rb;
@@ -55,13 +56,20 @@ public class Ghost : MonoBehaviour
     public static Action<GhostState> OnAfterGhostStateChange;
     public static Action<Vector2> OnGhostEaten;
 
-void Awake()
+    void Awake()
     {
         GameManager.OnGamePlaying += OnGamePlaying;
         GameManager.OnPowerUpFading += OnPowerUpFading;
         GameManager.OnBeforeGameStateChange += OnBeforeGameStateChange;
         ghostBounds = GetComponent<Collider2D>().bounds;
         rb = GetComponent<Rigidbody2D>();
+        eyeSpriteMap = new Dictionary<Vector2, int>
+        {
+            { Vector2.up, 0 },
+            { Vector2.down, 1 },
+            { Vector2.left, 2 },
+            { Vector2.right, 3 },
+        };
     }
 
     void OnDestroy()
@@ -172,8 +180,6 @@ void Awake()
     {
         switch (gameState)
         {
-            case GameState.Starting:
-                break;
             case GameState.Playing:
                 if (State == GhostState.Fleeing)
                 {
@@ -195,12 +201,6 @@ void Awake()
                     GhostStateChange(GhostState.Fleeing);
                 }
                 SetGhostSprite(false, false, true, false);
-                break;
-            case GameState.PacmanDying:
-                break;
-            case GameState.LevelCompleted:
-                break;
-            case GameState.GameOver:
                 break;
         }
     }
@@ -312,7 +312,6 @@ void Awake()
 
     Vector2 CheckDirectionToFlee()
     {
-        Debug.Log("Fleeing");
         if (directionPicked == true)
         {
             return direction;
@@ -325,7 +324,6 @@ void Awake()
         {
             
             int i = UnityEngine.Random.Range(0, OpenPath.Count);
-            Debug.Log(OpenPath.Count + "/" + i);
             var dir = OpenPath[i];
 
             //prevent to go back
@@ -334,7 +332,6 @@ void Awake()
                 continue;
             }
             bestDirection = dir;
-            Debug.Log(bestDirection);
         }
         directionPicked = true;
         return bestDirection;
@@ -537,24 +534,10 @@ void Awake()
 
         eyeDirection = newDirection;
 
-        if (newDirection == Vector2.up)
+        if (eyeSpriteMap.TryGetValue(newDirection, out eyeIndex))
         {
-            eyeIndex = 0;
+            eyeRenderer.sprite = eyes[eyeIndex];
         }
-        else if (newDirection == Vector2.down)
-        {
-            eyeIndex = 1;
-        }
-        else if (newDirection == Vector2.left)
-        {
-            eyeIndex = 2;
-        }
-        else if (newDirection == Vector2.right)
-        {
-            eyeIndex = 3;
-        }
-
-        eyeRenderer.sprite = eyes[eyeIndex];
     }
 
     void OnTriggerEnter2D(Collider2D other)

@@ -56,6 +56,7 @@ public class Pacman : MonoBehaviour
 
     bool directionPicked = false;
     Vector2 destination;
+    Vector2 direction;
 
     void ProcessMovement()
     {
@@ -63,7 +64,6 @@ public class Pacman : MonoBehaviour
 
         if (directionPicked)
         {
-            //arrived at destination
             if (Vector2.Distance(currentPos, destination) < 0.1f)
             {
                 directionPicked = false;
@@ -99,11 +99,6 @@ public class Pacman : MonoBehaviour
         }
     }
 
-    public void OnMove(InputAction.CallbackContext callback)
-    {
-        moveInput = callback.ReadValue<Vector2>();
-    }
-
     bool CheckIfDirectionOpen(Vector2 moveInput)
     {
         var vectorToCheck = moveInput.normalized;
@@ -113,6 +108,11 @@ public class Pacman : MonoBehaviour
         var ray = Physics2D.Raycast(origin, vectorToCheck, layLenth, wallLayer);
         Debug.DrawLine(origin, origin + vectorToCheck * layLenth, Color.red);
         return (ray.collider == null);
+    }
+
+    public void OnMove(InputAction.CallbackContext callback)
+    {
+        moveInput = callback.ReadValue<Vector2>();
     }
 
     void PacmanRotate(Vector2 dir)

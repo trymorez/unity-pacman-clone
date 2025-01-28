@@ -178,7 +178,7 @@ MonoBehaviour:
   bodyRenderer: {fileID: 3048774987989624740}
   blueRenderer: {fileID: 7255238318802626325}
   whiteRenderer: {fileID: 2855134083861986259}
-  moveSpeed: 5
+  moveSpeed: 7
   wallLayer:
     serializedVersion: 2
     m_Bits: 64

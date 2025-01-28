@@ -1,5 +1,5 @@
 
-# Pacman Clone V 1.2
+# Pacman Clone V 1.3
 
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
@@ -14,17 +14,20 @@ Just as important as the ghosts' movement AI is the implementation of their beha
 - Recommended Unity version: Unity 6 (6000.0.32f1 and later)
 
 
-## Authors (제작자)
+## Authors
 
 - [@trymorez](https://www.github.com/trymorez)
 
-## Screenshots (스크린샷)
+## Screenshots
 
 ![screenshot](Assets/Screenshot/screenshot-V1.1(1).png)
 ![screenshot](Assets/Screenshot/screenshot-V1.1(2).png)
                                                              
 
-## Version History (버전 내역)
+## Version History
+**V 1.3 - (2025-01-28)**
+- Increased the number of intersection nodes to make Pac-Man's control smoother
+
 **V 1.2 - (2025-01-27)**
 - Level progression has been implemented
 

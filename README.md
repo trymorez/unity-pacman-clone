@@ -1,6 +1,8 @@
 
 # Pacman Clone V 1.3
 
+[**Play Game!!!**](https://trymorez.github.io/unity-2d-platformer/Build/index.html)
+
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
 One of the most distinctive features of Pac-Man is the need to implement custom AI. If I use Unity's default pathfinding AI, NavMesh, the ghosts will always move in the shortest path and continuously adjust their routes, making it difficult for the player to survive. Additionally, during the research phase, I found that each ghost has its own personality and operates with different custom AIs. As I progress with the project, I plan to implement at least two types of AI if possible.
@@ -12,11 +14,6 @@ In my previous project, Space Invaders, I used coroutines as the main routine an
 Just as important as the ghosts' movement AI is the implementation of their behavior patterns. The ghosts in Pac-Man move with completely different and unique behavior patterns based on various AI states (idle, chase, scatter, frightened, and eye-only). Implementing these behaviors as state patterns will make maintenance easier, enhance scalability, and provide a basic framework for AI agents in future games.
 
 - Recommended Unity version: Unity 6 (6000.0.32f1 and later)
-
-
-## Authors
-
-- [@trymorez](https://www.github.com/trymorez)
 
 ## Screenshots
 

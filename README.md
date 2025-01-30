@@ -1,5 +1,5 @@
 
-# Pacman Clone V 1.3
+# Pacman Clone V 1.31
 
 [**Play Game!!!**](https://trymorez.github.io/unity-2d-platformer/Build/index.html)
 
@@ -22,6 +22,9 @@ Just as important as the ghosts' movement AI is the implementation of their beha
                                                              
 
 ## Version History
+**V 1.31 - (2025-01-30)**
+- Fixed a bug where ghosts eaten by Pac-Man could not return home properly
+
 **V 1.3 - (2025-01-28)**
 - Increased the number of intersection nodes to make Pac-Man's control smoother
 

@@ -224,8 +224,8 @@ public class Ghost : MonoBehaviour
     #region --- returning ---
     void GhostReturning()
     {
-        float minDistance = 0.1f;
-        float eyeVelocity = 3.0f;
+        float minDistance = 0.5f;
+        float eyeVelocity = 2.0f;
 
         direction = CheckDirectionToReturn();
         SetGhostSprite(true, false, false, false);

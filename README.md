@@ -1,7 +1,7 @@
 
 # Pacman Clone V 1.31
 
-[**Play Game!!!**](https://trymorez.github.io/unity-2d-platformer/Build/index.html)
+[**[Play Game!!!]**](https://trymorez.github.io/unity-retro-game-series-02/Build/index.html)
 
 For the next project, I have chosen Pac-Man as the sequel to the retro game.
 
